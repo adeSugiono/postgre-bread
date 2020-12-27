@@ -1,3 +1,4 @@
+const { query } = require('express');
 var express = require('express');
 var router = express.Router();
 
@@ -65,7 +66,7 @@ module.exports = function (pool) {
 
 
   router.get('/', function (req, res, next) {
-    pool.query(`SELECT * FROM data`, (err, resp) => {
+    pool.query(`SELECT * FROM public.data`, (err, resp) => {
       if (err) return res.status(500).json({ message: "terjadi kesalahan di router.post" });
       res.json(resp.rows)
     })
@@ -76,7 +77,8 @@ module.exports = function (pool) {
     res.render('add')
   });
   router.post('/', function (req, res, next) {
-    pool.query('INSERT INTO data ( string, integer, float, date, boolean) VALUES ($1, $2, $3, $4, $5)', [req.body.string, Number(req.body.integer), Number(req.body.float), req.body.date, req.body.boolean], (err, resp) => {
+    console.log(query);
+    pool.query(`INSERT INTO data( string, integer, float, data, boolean) VALUES ('$1', $2, $3, '$4', $5)`, [req.body.string, Number(req.body.integer), Number(req.body.float), req.body.date, req.body.boolean], (err, resp) => {
       if (err) return res.status(500).json({ message: "terjadi kesalahan di router.post" });
       res.redirect('/')
     })
@@ -99,7 +101,7 @@ module.exports = function (pool) {
   router.delete('/:id', function (req, res, next) {
     pool.query('DELETE FROM data WHERE id=$1', [Number(req.params.id)], (err, resp) => {
       if (err) return res.status(500).json({ message: "terjadi kesalahan di router.delete" });
-      res.redirect('/')
+      res.send({message: "Succes"})
     })
   });
 
