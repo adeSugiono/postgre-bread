@@ -78,8 +78,8 @@
           <div class="col-sm-10">
             <select class="custom-select" id="inputBoolean" required>
               <option selected disabled value="">Choose the boolean ...</option>
-              <option value="true" >True</option>
-              <option value="false" >False</option>
+              <option value="true">True</option>
+              <option value="false">False</option>
             </select>
             <div class="invalid-feedback">
               Please select a valid state.
@@ -132,14 +132,20 @@
     $(document).ready(function () {
       getData()
 
+      $('form').submit(function(e){
+       e.preventDefault();
+        addData();
+        $('form').trigger('reset');
+      })
+
       $("table tbody").on("click", ".btn-delete", function () {
-        if(confirm("Are you sure ?")){
+        if (confirm("Are you sure ?")) {
           deleteData($(this).attr("data-id"));
         }
         return false;
-        })
+      })
       $("table tbody").on("click", ".btn-edit", function () {
-        editData($(this).attr("data-edit"));
+        editData($(this).attr("data-edit")).preventDefault();
       })
     })
 
@@ -173,6 +179,23 @@
         })
     };
 
+    const addData = () => {
+      $.ajax({
+        method: "POST",
+        url: API_URL,
+        dataType: "json",
+        data: { string: $('#string').val(), integer: $('#integer').val(), float: $('#float').val(), date: $('#date').val(), boolean: $('#boolean').val()}
+        //data: { string, integer, float, date, boolean }
+      })
+        .done(function (data) {
+          getData()
+
+        })
+        .fail(function (jqXHR, textStatus) {
+          alert("Request failed add data: " + textStatus);
+        })
+    }
+
     const deleteData = (id) => {
       $.ajax({
         method: "DELETE",
@@ -189,13 +212,12 @@
 
     const editData = (id) => {
       $.ajax({
-        method: "POST",
+        method: "PUT",
         url: `${API_URL}/${id}`,
         dataType: "json"
       })
         .done(function (data) {
           getData()
-          console.log({data})
         })
         .fail(function (jqXHR, textStatus) {
           alert("Request failed Update data: " + textStatus);
