@@ -53,6 +53,40 @@
       <button type="submit" class="btn btn-primary">SAVE</button>
       <a href="/" class="btn btn-warning">BACK</a>
     </form>
+
+    <script type="text/javascript">
+      const API_URL = 'http://localhost:3000/api/index';
+  
+      $(document).ready(function () {
+        $('form').submit(function(e){
+         e.preventDefault();
+          addData();
+          $('form').trigger('reset');
+        })
+      })
+
+      const addData = () => {
+        $.ajax({
+          method: "POST",
+          url: API_URL,
+          dataType: "json",
+          data: { string: $('#string').val(), integer: $('#integer').val(), float: $('#float').val(), date: $('#date').val(), boolean: $('#boolean').val()}
+          //data: { string, integer, float, date, boolean }
+        })
+          .done(function (data) {
+            getData()
+  
+          })
+          .fail(function (jqXHR, textStatus) {
+            alert("Request failed add data: " + textStatus);
+          })
+      }
+  
+
+  
+  
+    </script>
+
   </div>
 
 </html>
