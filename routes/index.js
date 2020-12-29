@@ -78,7 +78,7 @@ module.exports = function (pool) {
   });
   router.post('/', function (req, res, next) {
     console.log(query);
-    pool.query(`INSERT INTO data( string, integer, float, data, boolean) VALUES ('$1', $2, $3, '$4', $5)`, [req.body.string, Number(req.body.integer), Number(req.body.float), req.body.date, req.body.boolean], (err, resp) => {
+    pool.query(`INSERT INTO data( string, integer, float, date, boolean) VALUES ('$1', $2, $3, '$4', $5)`, [req.body.string, Number(req.body.integer), Number(req.body.float), req.body.date, req.body.boolean], (err, resp) => {
       if (err) return res.status(500).json({ message: "terjadi kesalahan di router.post" });
       res.redirect('/')
     })
@@ -94,7 +94,7 @@ module.exports = function (pool) {
   router.post('/edit/:id', function (req, res, next) {
     pool.query('UPDATE data SET string=$1, integer=$2, float=$3, date=$4, boolean=$5 WHERE id=$6', [req.body.string, Number(req.body.integer), Number(req.body.float), req.body.date, req.body.boolean, Number(req.params.id)], (err, resp) => {
       if (err) return res.status(500).json({ message: "terjadi kesalahan di router.put" });
-      res.redirect('/')
+      res.send({message: "Succes"})
     })
   });
 
